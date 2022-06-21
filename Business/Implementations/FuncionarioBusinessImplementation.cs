@@ -1,5 +1,5 @@
 ﻿using FuncionariosAPI.Models;
-using FuncionariosAPI.Repository.Implementations;
+using FuncionariosAPI.Repository;
 using System.Collections.Generic;
 
 //Lida com as regras de negócio por Funcionário
@@ -7,7 +7,12 @@ namespace FuncionariosAPI.Business.Implementations
 {
     public class FuncionarioBusinessImplementation : IFuncionarioBusiness
     {
-        private FuncionarioRepositoryImplementation _repository;
+        private IFuncionarioRepository _repository;
+
+        public FuncionarioBusinessImplementation(IFuncionarioRepository repository)
+        {
+            _repository = repository;
+        }
 
         public Funcionario Create(Funcionario funcionario)
         {

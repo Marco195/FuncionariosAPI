@@ -11,39 +11,29 @@ namespace FuncionariosAPI.Repository.Implementations
     {
         private MySqlDbContext _context;
 
+        public FuncionarioRepositoryImplementation(MySqlDbContext context)
+        {
+            _context = context;
+        }
+
         public Funcionario Create(Funcionario funcionario)
         {
-            //try
-            //{
-            //    _context.Funcionarios.Add(funcionario);
-            //    _context.SaveChanges();
-            //}
-            //catch (System.Exception)
-            //{
+            try
+            {
+                _context.Funcionarios.Add(funcionario);
+                _context.SaveChanges();
+            }
+            catch (System.Exception)
+            {
 
-            //    throw;
-            //}
+                throw;
+            }
 
             return funcionario;
         }
 
         public void Delete(long id)
         {
-            //var funcionario = _context.Funcionarios.SingleOrDefault(f => f.Id == id);
-
-            //if (funcionario is not null)
-            //{
-            //    try
-            //    {
-            //        _context.Funcionarios.Remove(funcionario);
-            //        _context.SaveChanges();
-            //    }
-            //    catch (System.Exception)
-            //    {
-            //        throw;
-            //    }
-            //}
-
             var funcionario = _context.Funcionarios.SingleOrDefault(f => f.Id == id);
 
             if (funcionario is not null)
@@ -51,6 +41,7 @@ namespace FuncionariosAPI.Repository.Implementations
                 try
                 {
                     _context.Funcionarios.Remove(funcionario);
+                    _context.SaveChanges();
                 }
                 catch (System.Exception)
                 {
@@ -61,8 +52,7 @@ namespace FuncionariosAPI.Repository.Implementations
 
         public List<Funcionario> FindAll()
         {
-            // return _context.Funcionarios.ToList();
-            return _context.Funcionarios;
+            return _context.Funcionarios.ToList();
         }
 
         public Funcionario FindById(long id)
@@ -72,29 +62,14 @@ namespace FuncionariosAPI.Repository.Implementations
 
         public Funcionario Update(Funcionario funcionario)
         {
-            //if(!Exists(funcionario)) return null;
-
-            //var result = _context.Funcionarios.SingleOrDefault(f => f.Id == funcionario.Id);
-
-            //try
-            //{
-            //    _context.Entry(result).CurrentValues.SetValues(funcionario);
-            //    _context.SaveChanges();
-            //}
-            //catch (Exception)
-            //{
-
-            //    throw;
-            //}
-
             if (!Exists(funcionario)) return null;
 
             var result = _context.Funcionarios.SingleOrDefault(f => f.Id == funcionario.Id);
 
             try
             {
-                _context.Funcionarios.Remove(result);
-                _context.Funcionarios.Add(funcionario);
+                _context.Entry(result).CurrentValues.SetValues(funcionario);
+                _context.SaveChanges();
             }
             catch (Exception)
             {

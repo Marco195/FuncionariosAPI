@@ -1,7 +1,13 @@
+using FuncionariosAPI.Business;
+using FuncionariosAPI.Business.Implementations;
+using FuncionariosAPI.Models.Context;
+using FuncionariosAPI.Repository;
+using FuncionariosAPI.Repository.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +32,15 @@ namespace FuncionariosAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
+            var connection = Configuration["MySqlConnection:MySqlConnectionString"];
+            services.AddDbContext<MySqlDbContext>(options => options.UseMySql(connection));
+
+            //injeção de dependência
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepositoryImplementation>();
+            services.AddScoped<IFuncionarioBusiness, FuncionarioBusinessImplementation>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FuncionariosAPI", Version = "v1" });
